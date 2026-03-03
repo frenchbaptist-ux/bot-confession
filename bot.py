@@ -4,12 +4,12 @@ import os
 from flask import Flask
 from threading import Thread
 
-# --- SERVEUR DE MAINTIEN ---
+# --- SYSTÈME DE MAINTIEN POUR RENDER ---
 app = Flask('')
 
 @app.route('/')
 def home():
-    return "Bot en ligne"
+    return "Le bot est opérationnel !"
 
 def run():
     port = int(os.environ.get("PORT", 8080))
@@ -20,7 +20,7 @@ def keep_alive():
     t.daemon = True
     t.start()
 
-# --- BOT TELEGRAM ---
+# --- CONFIGURATION DU BOT ---
 TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(TOKEN)
 
@@ -56,14 +56,14 @@ def handle_message(message):
     if '.' in clean_text:
         parts = clean_text.split('.')
         if len(parts) == 2:
-            c_id, p_id = parts[0].strip(), parts[1].strip()
+            c_id = parts[0].strip()
+            p_id = parts[1].strip()
             if c_id in confession_data and p_id in confession_data[c_id]:
-                rep = f"« {confession_data[c_id][p_id]} »\n\n— Confession de 1689, {c_id}.{p_id}."
+                # LA LIGNE MODIFIÉE CI-DESSOUS
+                rep = f"« {confession_data[c_id][p_id]} »\n\n— Confession de foi baptiste de Londres de 1689, {c_id}.{p_id}."
                 bot.reply_to(message, rep)
 
 if __name__ == "__main__":
-    # Supprime d'éventuelles sessions fantômes
-    bot.delete_webhook() 
+    bot.delete_webhook()
     keep_alive()
-    print("Démarrage du bot...")
     bot.infinity_polling(timeout=10, long_polling_timeout=5)
