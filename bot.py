@@ -1,8 +1,9 @@
 import json
 import telebot
+import os
 
-# Ton Token
-TOKEN = '8762074916:AAFJYcaJx3vVOgP7PicJNLzfESWVFBbzgMo'
+# Récupération du Token depuis les variables d'environnement de Render
+TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = telebot.TeleBot(TOKEN)
 
